@@ -3,15 +3,16 @@ using UnityEngine.AI; // NavMeshを使うために必要
 
 public class Enemy : MonoBehaviour
 {
+    public Transform[] waypoints; // 経由地リスト
     private NavMeshAgent agent;
-    public Transform goal; // ゴール地点
+    private int currentIndex = 0;
 
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
-        if (goal != null)
+        if (waypoints.Length > 0)
         {
-            agent.SetDestination(goal.position);
+            agent.SetDestination(waypoints[0].position);
         }
     }
 
@@ -19,13 +20,21 @@ public class Enemy : MonoBehaviour
     {
         if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
         {
-            ReachGoal();
+            currentIndex++;
+            if (currentIndex < waypoints.Length)
+            {
+                agent.SetDestination(waypoints[currentIndex].position);
+            }
+            else
+            {
+                ReachGoal();
+            }
         }
     }
 
     void ReachGoal()
     {
-        // ゴールに到達した時の処理（例：ライフを減らすなど）
+        // ゴール処理（HP減らすなど）
         Destroy(gameObject);
     }
 }
