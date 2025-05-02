@@ -10,27 +10,30 @@ public class TowerPlacer : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0)) // 左クリック
+        if (Input.GetMouseButtonDown(0))
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
 
-            // 地面をクリックしたら設置
-            if (Physics.Raycast(ray, out hit, 100f, groundLayer))
+            if (Physics.Raycast(ray, out hit, 100f))
             {
-
-                Vector3 placePosition = hit.point;
-                placePosition.y = 0f; // タワーを地面に合わせる
-
-                if (CheckBeFogged(placePosition))
+                TowerPlace place = hit.collider.GetComponent<TowerPlace>();
+                if (place != null && !place.isOccupied)
                 {
-                    Debug.Log("すでにタワーが設置されています！");
-                    return;
-                }
+                    // まだ設置されていなければ設置
+                    Vector3 placePos = place.transform.position;
 
-                PlaceTower(placePosition);
+                    PlaceTower(placePos);
+
+                    place.isOccupied = true;
+                }
+                else
+                {
+                    Debug.Log("ここには設置できません！");
+                }
             }
         }
+
     }
 
     void PlaceTower(Vector3 position)
