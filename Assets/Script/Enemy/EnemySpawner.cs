@@ -23,7 +23,6 @@ public class EnemySpawner : MonoBehaviour
         while (true)
         {
             currentWave++;
-            Debug.Log("Wave " + currentWave + " 開始！");
 
             for (int i = 0; i < enemiesPerWave; i++)
             {
@@ -31,7 +30,6 @@ public class EnemySpawner : MonoBehaviour
                 yield return new WaitForSeconds(spawnInterval);
             }
 
-            Debug.Log("Wave " + currentWave + " 終了。次のWaveまで待機...");
             yield return new WaitForSeconds(waveInterval);
         }
     }

@@ -3,7 +3,6 @@ using UnityEngine;
 public class TowerPlacer : MonoBehaviour
 {
     public GameObject towerPrefab;     // 配置するタワーのプレハブ
-    public LayerMask towerLayer;
     public LayerMask groundLayer;      // 地面レイヤー
     public float checkRadius = 0.5f;
 
@@ -15,7 +14,7 @@ public class TowerPlacer : MonoBehaviour
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
 
-            if (Physics.Raycast(ray, out hit, 100f))
+            if (Physics.Raycast(ray, out hit, 100f, groundLayer))
             {
                 TowerPlace place = hit.collider.GetComponent<TowerPlace>();
                 if (place != null && !place.isOccupied)
@@ -39,10 +38,5 @@ public class TowerPlacer : MonoBehaviour
     void PlaceTower(Vector3 position)
     {
         Instantiate(towerPrefab, position, Quaternion.identity);
-    }
-
-    bool CheckBeFogged(Vector3 pos)　//他のタワーが近くにあるか確認
-    {
-        return Physics.CheckSphere(pos, checkRadius, towerLayer);
     }
 }
