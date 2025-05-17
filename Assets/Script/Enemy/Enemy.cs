@@ -7,6 +7,11 @@ public class Enemy : MonoBehaviour
     private NavMeshAgent agent;
     private int currentIndex = 0;
 
+    private int hp = 5;
+
+    public delegate void EnemyDeathHandler(Transform enemy);
+    public static event EnemyDeathHandler OnEnemyDeath;
+
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
@@ -30,6 +35,31 @@ public class Enemy : MonoBehaviour
                 ReachGoal();
             }
         }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        Debug.Log("hit");
+        if (collision.gameObject.CompareTag("Bullet")) {
+            HitBullet();
+        }
+
+    }
+
+    private void HitBullet()
+    {
+        hp--;
+        if (hp <= 0)
+        {
+            Die();
+        }
+    }
+
+    public void Die()
+    {
+        // Ž€–Sˆ—
+        OnEnemyDeath?.Invoke(transform);
+        Destroy(gameObject);
     }
 
     void ReachGoal()

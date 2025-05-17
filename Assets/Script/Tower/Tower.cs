@@ -24,6 +24,22 @@ public class Tower : MonoBehaviour
         }
     }
 
+    void OnEnable()
+    {
+        Enemy.OnEnemyDeath += HandleEnemyDeath;
+    }
+
+    void OnDisable()
+    {
+        Enemy.OnEnemyDeath -= HandleEnemyDeath;
+    }
+
+    void HandleEnemyDeath(Transform enemy)
+    {
+        targets.Remove(enemy);
+    }
+
+
     void Fire(Transform target)
     {
         GameObject bullet = BulletPool.Instance.GetBullet();
@@ -33,10 +49,8 @@ public class Tower : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("dd");
         if (other.CompareTag("Enemy"))
         {
-            Debug.Log("d");
             targets.Add(other.transform);
         }
     }

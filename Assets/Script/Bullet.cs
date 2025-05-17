@@ -4,6 +4,13 @@ public class Bullet : MonoBehaviour
 {
     public float speed = 10f;
     private Transform target;
+    private Rigidbody _rb;
+
+
+    private void Start()
+    {
+        _rb = GetComponent<Rigidbody>();
+    }
 
     public void SetTarget(Transform targetTransform)
     {
@@ -19,13 +26,20 @@ public class Bullet : MonoBehaviour
         }
 
         Vector3 dir = (target.position - transform.position).normalized;
-        transform.position += dir * speed * Time.deltaTime;
+        //transform.position += dir * speed * Time.deltaTime;
+        _rb.velocity = dir * speed;
 
-        if (Vector3.Distance(transform.position, target.position) < 0.1f)
-        {
-            // ƒ_ƒ[ƒWˆ—‚È‚Ç‚ ‚ê‚Î‚±‚±‚É‘‚­
+    }
 
-            BulletPool.Instance.ReturnBullet(gameObject);
-        }
+
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        HitOther();
+    }
+
+    private void HitOther()
+    {
+        BulletPool.Instance.ReturnBullet(gameObject);
     }
 }
